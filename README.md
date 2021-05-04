@@ -9,6 +9,30 @@ have run into, mostly when dealing with mTLS-enabled Apache Kafka.
 Caused by: javax.crypto.AEADBadTagException: Tag mismatch!
 ```
 
+I have seen this exception a couple of times, both related to using a
+certificate for more than it is made to allow.
+
+* Using a server-only certificate in a client. Make sure "X509v3
+  Extended Key Usage" contains at least "TLS Web Client
+  Authentication":
+
+  ```text
+        X509v3 extensions:
+            X509v3 Extended Key Usage: 
+                TLS Web Client Authentication, TLS Web Server Authentication
+  ```
+  
+* Certificate contains "X509v3 Key Usage" without allowing "Data
+  Encipherment". If this extension is part of the certificate, it
+  limits what the key may be used for to the usages listed. Make sure
+  it contains "Data Encipherment":
+
+  ```text
+        X509v3 extensions:
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment, Data Encipherment
+  ```
+
 ## Java heap space
 
 ```text
