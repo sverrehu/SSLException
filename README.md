@@ -2,6 +2,7 @@
 
 Notes on various occurrences of `javax.net.ssl.SSLException` that I
 have run into, mostly when dealing with mTLS-enabled Apache Kafka.
+Crypto error messages appear to be rather cryptic. ;-)
 
 ## Tag mismatch!
 
@@ -54,3 +55,14 @@ javax.crypto.BadPaddingException: Given final block not properly padded. Such is
 ```
 
 Wrong keystore/truststore password.
+
+## Decryption failed or bad record mac
+
+Not Java, but Python:
+
+```text
+ssl.SSLError: [SSL: DECRYPTION_FAILED_OR_BAD_RECORD_MAC] decryption failed or bad record mac (_ssl.c:2309)
+```
+
+We saw this error on a client which tried to use an expired client
+certificate.
